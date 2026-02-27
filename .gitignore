@@ -1,0 +1,14 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform lock (optional but recommended to ignore for now)
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# OS
+.DS_Store

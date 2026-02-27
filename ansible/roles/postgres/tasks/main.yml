@@ -1,0 +1,51 @@
+- name: Install PostgreSQL
+  apt:
+    name:
+      - postgresql
+      - python3-psycopg2
+    state: present
+    update_cache: yes
+
+- name: Ensure PostgreSQL is running
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create PostgreSQL database
+  community.postgresql.postgresql_db:
+    name: sejalpgdb
+    state: present
+  become: yes
+  become_user: postgres
+
+- name: Create PostgreSQL user
+  community.postgresql.postgresql_user:
+    name: sejalpguser
+    password: sejal123
+    role_attr_flags: LOGIN
+    state: present
+  become: yes
+  become_user: postgres
+
+- name: Grant privileges on database
+  community.postgresql.postgresql_privs:
+    db: sejalpgdb
+    roles: sejalpguser
+    privs: ALL
+    type: database
+    state: present
+  become: yes
+  become_user: postgres
+
+- name: Insert sample row into PostgreSQL
+  community.postgresql.postgresql_query:
+    db: sejalpgdb
+    query: |
+      INSERT INTO users (name)
+      SELECT 'Sejal DevOps'
+      WHERE NOT EXISTS (
+        SELECT 1 FROM users WHERE name = 'Sejal DevOps'
+      )
+  become: yes
+  become_user: postgres

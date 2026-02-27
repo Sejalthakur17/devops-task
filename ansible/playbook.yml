@@ -1,0 +1,10 @@
+---
+- name: Configure Sejal Ubuntu Server
+  hosts: web
+  become: yes
+
+  roles:
+    - nginx
+    - mysql
+    - postgres
+    - docker
