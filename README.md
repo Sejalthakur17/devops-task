@@ -84,11 +84,14 @@ Prometheus
 
 Grafana
 
-Commands Used:
+## Commands Used:
 
 docker swarm init
+
 docker service create
+
 docker stack deploy
+
 docker service ls
 
 ## Step 4: Monitoring Setup
