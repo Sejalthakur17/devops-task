@@ -21,6 +21,19 @@ module "ec2" {
   ami_id             = var.ami_id
   instance_type      = var.instance_type
   key_name           = var.key_name
-  public_subnet_id   = module.vpc.public_subnet_id
+  subnet_id          = module.vpc.private_subnet_id
   security_group_id  = module.security_groups.ec2_sg_id
+}
+
+resource "aws_instance" "bastion" {
+  ami                         = "ami-0a6193f0120f4fd88"  
+  instance_type               = "t3.micro"
+  subnet_id                   = module.vpc.public_subnet_id
+  associate_public_ip_address = true
+  vpc_security_group_ids      = [module.security_groups.bastion_sg_id]
+  key_name                    = var.key_name
+
+  tags = {
+    Name = "sejal-${var.environment}-bastion"
+  }
 }
