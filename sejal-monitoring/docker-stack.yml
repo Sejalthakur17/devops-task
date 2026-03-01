@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor-net
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitor-net
+
+  node_exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - monitor-net
+
+  postgres_exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://sejalpguser:password@host.docker.internal:5432/sejalpgdb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - monitor-net
+
+  mysql_exporter:
+    image: prom/mysqld-exporter
+    environment:
+      DATA_SOURCE_NAME: "sejalmysql:password@(host.docker.internal:3306)/"
+    ports:
+      - "9104:9104"
+    networks:
+      - monitor-net
+
+networks:
+  monitor-net:
